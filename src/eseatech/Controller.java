@@ -3,9 +3,8 @@ package eseatech;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.MenuItem;
+import org.usb4java.Device;
 
 public class Controller {
 
@@ -14,8 +13,12 @@ public class Controller {
 
     @FXML
     protected void handleCOMPort(ActionEvent event) {
-        Alert alert = new Alert(Alert.AlertType.ERROR, "Impossible d'initialiser LibUSB", ButtonType.OK);
-        alert.showAndWait();
+        Device arduino = Utils.findArduino();
+
+        if (arduino != null)
+            System.out.println("Found arduino!");
+        else
+            System.out.println("Arduino not found!");
     }
 
     @FXML
