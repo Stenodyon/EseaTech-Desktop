@@ -23,10 +23,11 @@ public class Utils {
             for (Device device : list) {
                 DeviceDescriptor descriptor = new DeviceDescriptor();
                 result = LibUsb.getDeviceDescriptor(device, descriptor);
-                if (result == LibUsb.SUCCESS) {
-                    if (descriptor.idVendor() == ArduinoVendorId && descriptor.idProduct() == ArduinoProductId)
-                        return device;
-                }
+                if (result != LibUsb.SUCCESS)
+                    continue;
+
+                if (descriptor.idVendor() == ArduinoVendorId && descriptor.idProduct() == ArduinoProductId)
+                    return device;
             }
         } finally {
             LibUsb.freeDeviceList(list, true);
