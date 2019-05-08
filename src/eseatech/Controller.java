@@ -3,6 +3,7 @@ package eseatech;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import org.usb4java.Device;
 
@@ -15,10 +16,13 @@ public class Controller {
     protected void handleCOMPort(ActionEvent event) {
         Device arduino = Utils.findArduino();
 
-        if (arduino != null)
-            System.out.println("Found arduino!");
-        else
-            System.out.println("Arduino not found!");
+        if (arduino != null) {
+            connected_label.setText("Arduino connecté");
+            connected_label.setStyle("-fx-background-color: #00FF00;");
+        } else {
+            connected_label.setText("Arduino déconnecté");
+            connected_label.setStyle("-fx-background-color: #FF0000;");
+        }
     }
 
     @FXML
@@ -26,4 +30,7 @@ public class Controller {
         Platform.exit();
         System.exit(0);
     }
+
+    @FXML
+    private Label connected_label;
 }
