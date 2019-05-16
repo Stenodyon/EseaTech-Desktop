@@ -36,10 +36,10 @@ public class Controller implements Initializable {
 
     @FXML
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        int res = Utils.registerArduinoCallback(
+        int res = Utils.registerUSBCallback(
                 (Context context, Device device, int event, Object userData) -> {
                     System.out.println("Hotplug Callback called!");
-                    usbHotplugCallback(device, event);
+                    updateArduino();
                     return 0;
                 });
         if (res != LibUsb.SUCCESS) {
@@ -48,20 +48,9 @@ public class Controller implements Initializable {
         updateArduino();
     }
 
-    private void usbHotplugCallback(Device device, int event) {
-        if (event == LibUsb.HOTPLUG_EVENT_DEVICE_ARRIVED) {
-            arduino = device;
-        } else if (event == LibUsb.HOTPLUG_EVENT_DEVICE_LEFT) {
-            arduino = null;
-        } else {
-            System.err.printf("Unknown usb device event: %d\n", event);
-        }
-        updateArduinoBanner();
-    }
-
     private void updateArduino() {
         arduino = Utils.findArduino();
-        updateArduinoBanner();
+        Platform.runLater(() -> updateArduinoBanner());
     }
 
     private void updateArduinoBanner() {

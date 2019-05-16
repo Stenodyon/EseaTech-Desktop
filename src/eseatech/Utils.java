@@ -33,7 +33,7 @@ public class Utils {
         return null;
     }
 
-    public static int registerArduinoCallback(HotplugCallback callback) {
+    public static int registerUSBCallback(HotplugCallback callback) {
         HotplugCallbackHandle handle = new HotplugCallbackHandle();
         return LibUsb.hotplugRegisterCallback(
                 null,
