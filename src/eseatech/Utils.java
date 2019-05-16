@@ -3,10 +3,7 @@ package eseatech;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import org.usb4java.Device;
-import org.usb4java.DeviceDescriptor;
-import org.usb4java.DeviceList;
-import org.usb4java.LibUsb;
+import org.usb4java.*;
 
 public class Utils {
 
@@ -36,12 +33,19 @@ public class Utils {
         return null;
     }
 
-    public static void updateArduinoStatus() {
-        arduino = findArduino();
-    }
-
-    public static Device getArduino() {
-        return arduino;
+    public static int registerArduinoCallback(HotplugCallback callback) {
+        HotplugCallbackHandle handle = new HotplugCallbackHandle();
+        return LibUsb.hotplugRegisterCallback(
+                null,
+                LibUsb.HOTPLUG_EVENT_DEVICE_ARRIVED | LibUsb.HOTPLUG_EVENT_DEVICE_LEFT,
+                LibUsb.HOTPLUG_NO_FLAGS,
+                ArduinoVendorId,
+                ArduinoProductId,
+                LibUsb.HOTPLUG_MATCH_ANY,
+                callback,
+                null,
+                handle
+        );
     }
 
     public static void fail(String message) {
