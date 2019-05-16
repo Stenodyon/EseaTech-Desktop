@@ -22,7 +22,7 @@ public class Main extends Application {
             Utils.fail("LibUSB n'a pas la fonctionnalité HotPlug");
         }
 
-        new Thread(() -> {
+        Thread eventThread = new Thread(() -> {
             try {
                 while (true) {
                     LibUsb.handleEvents(null);
@@ -31,7 +31,9 @@ public class Main extends Application {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        }).start();
+        });
+        eventThread.setDaemon(true);
+        eventThread.start();
     }
 
     @Override
