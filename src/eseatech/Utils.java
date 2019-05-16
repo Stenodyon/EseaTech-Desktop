@@ -12,6 +12,7 @@ public class Utils {
 
     public static final int ArduinoVendorId = 0x2a03;
     public static final int ArduinoProductId = 0x42;
+    private static Device arduino = null;
 
     public static Device findArduino() {
         DeviceList list = new DeviceList();
@@ -33,6 +34,14 @@ public class Utils {
             LibUsb.freeDeviceList(list, true);
         }
         return null;
+    }
+
+    public static void updateArduinoStatus() {
+        arduino = findArduino();
+    }
+
+    public static Device getArduino() {
+        return arduino;
     }
 
     public static void fail(String message) {
