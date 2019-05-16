@@ -24,8 +24,10 @@ public class Main extends Application {
 
         new Thread(() -> {
             try {
-                LibUsb.handleEvents(null);
-                Thread.sleep(1000);
+                while (true) {
+                    LibUsb.handleEvents(null);
+                    Thread.sleep(1000);
+                }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
