@@ -14,27 +14,6 @@ public class Utils {
     public static final int ArduinoProductId = 0x42;
     private static DeviceHandle arduinoHandle = null;
 
-    public static int openArduino() {
-        if (arduinoHandle != null)
-            return 0;
-        Device arduino = findArduino();
-        if (arduino == null)
-            return 0;
-        arduinoHandle = new DeviceHandle();
-        return LibUsb.open(arduino, arduinoHandle);
-    }
-
-    public static boolean isArduinoOpen() {
-        return arduinoHandle != null;
-    }
-
-    public static void closeArduino() {
-        if (arduinoHandle == null)
-            return;
-        LibUsb.close(arduinoHandle);
-        arduinoHandle = null;
-    }
-
     public static Device findArduino() {
         DeviceList list = new DeviceList();
         int result = LibUsb.getDeviceList(null, list);
@@ -55,6 +34,27 @@ public class Utils {
             LibUsb.freeDeviceList(list, true);
         }
         return null;
+    }
+
+    public static int openArduino() {
+        if (arduinoHandle != null)
+            return 0;
+        Device arduino = findArduino();
+        if (arduino == null)
+            return 0;
+        arduinoHandle = new DeviceHandle();
+        return LibUsb.open(arduino, arduinoHandle);
+    }
+
+    public static boolean isArduinoOpen() {
+        return arduinoHandle != null;
+    }
+
+    public static void closeArduino() {
+        if (arduinoHandle == null)
+            return;
+        LibUsb.close(arduinoHandle);
+        arduinoHandle = null;
     }
 
     public static int registerUSBCallback(HotplugCallback callback) {
