@@ -18,6 +18,8 @@ public class Utils {
         if (arduinoHandle != null)
             return 0;
         Device arduino = findArduino();
+        if (arduino == null)
+            return 0;
         arduinoHandle = new DeviceHandle();
         return LibUsb.open(arduino, arduinoHandle);
     }
