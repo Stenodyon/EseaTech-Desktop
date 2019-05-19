@@ -5,11 +5,33 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import org.usb4java.*;
 
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+
 public class Utils {
 
     public static final int ArduinoVendorId = 0x2a03;
     public static final int ArduinoProductId = 0x42;
-    private static Device arduino = null;
+    private static DeviceHandle arduinoHandle = null;
+
+    public static int openArduino() {
+        if (arduinoHandle != null)
+            return 0;
+        Device arduino = findArduino();
+        arduinoHandle = new DeviceHandle();
+        return LibUsb.open(arduino, arduinoHandle);
+    }
+
+    public static boolean isArduinoOpen() {
+        return arduinoHandle != null;
+    }
+
+    public static void closeArduino() {
+        if (arduinoHandle == null)
+            return;
+        LibUsb.close(arduinoHandle);
+        arduinoHandle = null;
+    }
 
     public static Device findArduino() {
         DeviceList list = new DeviceList();
@@ -46,6 +68,14 @@ public class Utils {
                 null,
                 handle
         );
+    }
+
+    // Assumes arduino is not null
+    public static float USBReadFloat() {
+        ByteBuffer buffer = ByteBuffer.allocate(4);
+        IntBuffer transfered = IntBuffer.allocate(1);
+        LibUsb.bulkTransfer(arduinoHandle, LibUsb.ENDPOINT_IN, buffer, transfered, 0);
+        return buffer.getFloat();
     }
 
     public static void fail(String message) {

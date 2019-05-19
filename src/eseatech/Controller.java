@@ -10,12 +10,11 @@ import org.usb4java.Context;
 import org.usb4java.Device;
 import org.usb4java.LibUsb;
 
+import javax.rmi.CORBA.Util;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
-
-    private Device arduino = null;
 
     @FXML
     private MenuItem COM1;
@@ -39,22 +38,32 @@ public class Controller implements Initializable {
         int res = Utils.registerUSBCallback(
                 (Context context, Device device, int event, Object userData) -> {
                     System.out.println("Hotplug Callback called!");
-                    updateArduino();
+                    updateArduino(event);
                     return 0;
                 });
         if (res != LibUsb.SUCCESS) {
             System.err.printf("Unable to register the hotplug callback: %s\n", LibUsb.errorName(res));
         }
-        updateArduino();
+        updateArduino(0);
     }
 
-    private void updateArduino() {
-        arduino = Utils.findArduino();
+    private void updateArduino(int event) {
+        switch (event) {
+            case LibUsb.HOTPLUG_EVENT_DEVICE_LEFT:
+                Utils.closeArduino();
+                break;
+            default:
+                int result = Utils.openArduino();
+                if (result != 0) {
+                    System.err.printf("Unable to open Arduino USB: %s\n", LibUsb.errorName(result));
+                }
+                break;
+        }
         Platform.runLater(() -> updateArduinoBanner());
     }
 
     private void updateArduinoBanner() {
-        if (arduino != null) {
+        if (Utils.isArduinoOpen()) {
             connected_label.setText("Arduino connecté");
             connected_label.setStyle("-fx-background-color: #00FF00;");
         } else {
