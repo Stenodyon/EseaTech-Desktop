@@ -43,7 +43,10 @@ public class Utils {
         if (arduino == null)
             return 0;
         arduinoHandle = new DeviceHandle();
-        return LibUsb.open(arduino, arduinoHandle);
+        int result = LibUsb.open(arduino, arduinoHandle);
+        if (result != 0)
+            arduinoHandle = null;
+        return result;
     }
 
     public static boolean isArduinoOpen() {

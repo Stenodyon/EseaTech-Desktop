@@ -14,7 +14,7 @@ public class Main extends Application {
         if (result != LibUsb.SUCCESS) {
             Utils.fail(String.format(
                     "Impossible d'initialiser LibUSB: %s",
-                    LibUsb.errorName(result)));
+                    LibUsb.strError(result)));
         }
 
         if (!LibUsb.hasCapability(LibUsb.CAP_HAS_HOTPLUG)) {

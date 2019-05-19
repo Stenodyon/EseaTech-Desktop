@@ -42,7 +42,7 @@ public class Controller implements Initializable {
                     return 0;
                 });
         if (res != LibUsb.SUCCESS) {
-            System.err.printf("Unable to register the hotplug callback: %s\n", LibUsb.errorName(res));
+            System.err.printf("Unable to register the hotplug callback: %s\n", LibUsb.strError(res));
         }
         updateArduino(0);
     }
@@ -55,7 +55,7 @@ public class Controller implements Initializable {
             default:
                 int result = Utils.openArduino();
                 if (result != 0) {
-                    System.err.printf("Unable to open Arduino USB: %s\n", LibUsb.errorName(result));
+                    System.err.printf("Unable to open Arduino USB: %s\n", LibUsb.strError(result));
                 }
                 break;
         }
