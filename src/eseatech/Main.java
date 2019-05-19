@@ -16,6 +16,7 @@ public class Main extends Application {
                     "Impossible d'initialiser LibUSB: %s",
                     LibUsb.strError(result)));
         }
+        LibUsb.setOption(null, LibUsb.OPTION_LOG_LEVEL, 3);
 
         if (!LibUsb.hasCapability(LibUsb.CAP_HAS_HOTPLUG)) {
             Utils.fail("LibUSB n'a pas la fonctionnalité HotPlug");

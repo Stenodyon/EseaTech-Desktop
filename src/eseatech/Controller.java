@@ -21,7 +21,8 @@ public class Controller implements Initializable {
 
     @FXML
     protected void handleCOMPort(ActionEvent event) {
-        updateArduinoBanner();
+        float value = Utils.USBReadFloat();
+        System.out.printf("Read float from arduino: %f\n", value);
     }
 
     @FXML

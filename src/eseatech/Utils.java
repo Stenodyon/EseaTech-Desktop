@@ -77,9 +77,15 @@ public class Utils {
 
     // Assumes arduino is not null
     public static float USBReadFloat() {
-        ByteBuffer buffer = ByteBuffer.allocate(4);
+        ByteBuffer buffer = ByteBuffer.allocateDirect(4);
         IntBuffer transfered = IntBuffer.allocate(1);
-        LibUsb.bulkTransfer(arduinoHandle, LibUsb.ENDPOINT_IN, buffer, transfered, 0);
+        int result = LibUsb.bulkTransfer(arduinoHandle, (byte)0x82, buffer, transfered, 0);
+        if (result != 0) {
+            System.err.printf("Unable to read from Arduino: %s\n", LibUsb.strError(result));
+        }
+        if (transfered.get(0) != 4) {
+            System.err.printf("Did not read enough bytes: %d\n", transfered.get(0));
+        }
         return buffer.getFloat();
     }
 
