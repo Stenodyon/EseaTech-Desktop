@@ -8,6 +8,7 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
@@ -47,8 +48,18 @@
          <children>
             <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
                <children>
-                  <Label text="Batterie" />
-                  <ProgressBar fx:id="battery_indicator" prefWidth="200.0" progress="0.0" />
+                  <Label fx:id="battery_level_label" text="Batterie" />
+                  <AnchorPane prefHeight="30.0" prefWidth="200.0">
+                     <children>
+                        <ProgressBar fx:id="battery_indicator" prefWidth="200.0" progress="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="0.0" />
+                     </children>
+                  </AnchorPane>
+                  <Label fx:id="power_level_label" text="Consommation" />
+                  <AnchorPane layoutX="10.0" layoutY="64.0" prefHeight="30.0" prefWidth="200.0">
+                     <children>
+                        <ProgressBar fx:id="power_indicator" prefWidth="200.0" progress="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="0.0" />
+                     </children>
+                  </AnchorPane>
                </children>
             </VBox>
             <LineChart title="Humidite" GridPane.columnIndex="1">
