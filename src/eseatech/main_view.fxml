@@ -3,9 +3,11 @@
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
@@ -15,9 +17,9 @@
    <children>
       <MenuBar>
         <menus>
-          <Menu mnemonicParsing="false" text="File">
+          <Menu mnemonicParsing="false" text="FIchier">
             <items>
-              <MenuItem fx:id="menuClose" mnemonicParsing="false" onAction="#handleMenuClose" text="Close" />
+              <MenuItem fx:id="menuClose" mnemonicParsing="false" onAction="#handleMenuClose" text="Quitter" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Config">
@@ -25,9 +27,9 @@
                   <Menu id="usbPortMenu" fx:id="menu_serial_port" mnemonicParsing="false" text="Port Serie" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Help">
+          <Menu mnemonicParsing="false" text="Aide">
             <items>
-              <MenuItem mnemonicParsing="false" text="About" />
+              <MenuItem mnemonicParsing="false" text="A propos" />
             </items>
           </Menu>
         </menus>
@@ -43,7 +45,13 @@
           <RowConstraints minHeight="10.0" percentHeight="33.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <LineChart title="Batterie">
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <Label text="Batterie" />
+                  <ProgressBar fx:id="battery_indicator" prefWidth="200.0" progress="0.0" />
+               </children>
+            </VBox>
+            <LineChart title="Humidite" GridPane.columnIndex="1">
               <xAxis>
                 <CategoryAxis side="BOTTOM" />
               </xAxis>

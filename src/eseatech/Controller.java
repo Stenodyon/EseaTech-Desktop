@@ -6,20 +6,27 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Menu;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.ToggleGroup;
+import org.msgpack.core.MessageTypeException;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.concurrent.Semaphore;
 
 public class Controller implements Initializable {
 
+    private static Semaphore dataProviderMutex = null;
     private static DataProvider dataProvider = null;
 
     @FXML
     private Menu menu_serial_port;
+
+    @FXML
+    private ProgressBar battery_indicator;
 
     @FXML
     protected void handleMenuClose(ActionEvent event) {
@@ -29,23 +36,34 @@ public class Controller implements Initializable {
 
     @FXML
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        dataProviderMutex = new Semaphore(1);
+
         generateSerialMenu();
 
         Thread dataThread = new Thread(() -> {
             while (true) {
-                if (dataProvider != null) {
-                    try {
-                        Map<String, Float>[] entries = dataProvider.fetchData();
-                        System.out.printf("Fetched %d entries\n", entries.length);
-                        for (Map<String, Float> entry : entries) {
-                            System.out.println(entry.toString());
+                try {
+                    dataProviderMutex.acquire();
+
+                    if (dataProvider != null) {
+                        try {
+                            Map<String, Float>[] entries = dataProvider.fetchData();
+                            System.out.printf("Fetched %d entries\n", entries.length);
+                            for (Map<String, Float> entry : entries) {
+                                System.out.println(entry.toString());
+                                distributeData(entry);
+                            }
+                        } catch (IOException | MessageTypeException e) {
+                            e.printStackTrace();
                         }
-                    } catch (IOException e) {
-                        e.printStackTrace();
                     }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } finally {
+                    dataProviderMutex.release();
                 }
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -60,13 +78,21 @@ public class Controller implements Initializable {
     }
 
     private void setCurrentSerialPort(SerialPort newSerialPort) {
-        if (dataProvider != null) {
-            if (dataProvider.connectedTo(newSerialPort))
-                return;
-            dataProvider.close();
-        }
+        try {
+            dataProviderMutex.acquire();
 
-        dataProvider = new DataProvider(newSerialPort);
+            if (dataProvider != null) {
+                if (dataProvider.connectedTo(newSerialPort))
+                    return;
+                dataProvider.close();
+            }
+
+            dataProvider = new DataProvider(newSerialPort);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } finally {
+            dataProviderMutex.release();
+        }
     }
 
     private void generateSerialMenu() {
@@ -85,5 +111,20 @@ public class Controller implements Initializable {
 
             menu_serial_port.getItems().add(menuItem);
         }
+    }
+
+    private void distributeData(Map<String, Float> dataEntry) {
+        Float battery_level = dataEntry.get("battery");
+        if (battery_level != null)
+            updateBatteryLevel(battery_level);
+    }
+
+    private void updateBatteryLevel(float newValue) {
+        if (newValue < 0)
+            newValue = 0;
+        else if (newValue > 1)
+            newValue = 1;
+
+        battery_indicator.setProgress(newValue);
     }
 }
