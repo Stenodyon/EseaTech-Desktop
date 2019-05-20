@@ -12,9 +12,6 @@ import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
 
-    @FXML
-    private MenuItem COM1;
-
     private final String[] testPorts = {
             "/dev/ttyUSB0",
             "/dev/ttyACM0",

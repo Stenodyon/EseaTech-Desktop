@@ -22,11 +22,7 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Config">
             <items>
-                  <Menu id="usbPortMenu" fx:id="menu_serial_port" mnemonicParsing="false" text="Port Serie">
-                    <items>
-                      <MenuItem fx:id="COM1" mnemonicParsing="false" onAction="#handleCOMPort" text="COM1" />
-                    </items>
-                  </Menu>
+                  <Menu id="usbPortMenu" fx:id="menu_serial_port" mnemonicParsing="false" text="Port Serie" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
