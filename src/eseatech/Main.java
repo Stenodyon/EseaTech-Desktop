@@ -19,5 +19,9 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         launch(args);
+
+        if (Controller.currentSerialPort != null) {
+            Controller.currentSerialPort.closePort();
+        }
     }
 }

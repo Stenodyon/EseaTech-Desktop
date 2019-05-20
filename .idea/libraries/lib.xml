@@ -4,6 +4,7 @@
       <root url="jar:///usr/lib/jvm/java-8-openjdk/jre/lib/ext/jfxrt.jar!/" />
       <root url="file:///usr/lib/jvm/java-8-openjdk/jre/lib/ext" />
       <root url="jar://$USER_HOME$/Documents/libs/jSerialComm-2.5.1.jar!/" />
+      <root url="jar://$USER_HOME$/Documents/libs/msgpack-0.6.12.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

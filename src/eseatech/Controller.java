@@ -1,6 +1,8 @@
 package eseatech;
 
 import com.fazecast.jSerialComm.SerialPort;
+import com.fazecast.jSerialComm.SerialPortDataListener;
+import com.fazecast.jSerialComm.SerialPortEvent;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -14,7 +16,7 @@ import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
 
-    private SerialPort currentSerialPort = null;
+    public static SerialPort currentSerialPort = null;
 
     @FXML
     private Menu menu_serial_port;
@@ -31,7 +33,6 @@ public class Controller implements Initializable {
 
     @FXML
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        // TODO: Generate menu entries for USB ports
         generateSerialMenu();
     }
 
@@ -41,6 +42,21 @@ public class Controller implements Initializable {
         }
         currentSerialPort = newSerialPort;
         currentSerialPort.openPort();
+        currentSerialPort.addDataListener(new SerialPortDataListener() {
+            @Override
+            public int getListeningEvents() {
+                return SerialPort.LISTENING_EVENT_DATA_AVAILABLE;
+            }
+
+            @Override
+            public void serialEvent(SerialPortEvent event) {
+                if (event.getEventType() != SerialPort.LISTENING_EVENT_DATA_AVAILABLE)
+                    return;
+                byte[] data = new byte[currentSerialPort.bytesAvailable()];
+                int numRead = currentSerialPort.readBytes(data, data.length);
+                System.out.printf("Read %d bytes: \"%s\"\n", numRead, data.toString());
+            }
+        });
     }
 
     private void generateSerialMenu() {
