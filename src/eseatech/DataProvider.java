@@ -23,6 +23,15 @@ public class DataProvider
         unpacker = MessagePack.newDefaultUnpacker(port.getInputStream());
     }
 
+    public void close() {
+        unpacker = null;
+        port.closePort();
+    }
+
+    public boolean connectedTo(SerialPort otherPort) {
+        return otherPort.getSystemPortName().equals(port.getSystemPortName());
+    }
+
     public Map<String, Float>[] fetchData() throws IOException {
         sendFetchRequest();
         return unpackData();
