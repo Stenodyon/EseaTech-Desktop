@@ -72,7 +72,9 @@ public class Controller implements Initializable {
                                 System.out.println(entry.toString());
                                 distributeData(entry);
                             }
-                        } catch (IOException | MessageTypeException e) {
+                        } catch (MessageTypeException e) {
+                            dataProvider.clearBytes();
+                        } catch (IOException e) {
                             e.printStackTrace();
                         }
                     }

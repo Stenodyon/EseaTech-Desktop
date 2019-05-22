@@ -37,6 +37,11 @@ public class DataProvider
         return unpackData();
     }
 
+    public void clearBytes() {
+        byte[] buffer = new byte[port.bytesAvailable()];
+        port.readBytes(buffer, buffer.length);
+    }
+
     private void sendFetchRequest() {
         sendByte(REQUEST_COMMAND);
     }
