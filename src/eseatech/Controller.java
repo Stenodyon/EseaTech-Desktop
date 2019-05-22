@@ -5,6 +5,9 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.ScatterChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Menu;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.RadioMenuItem;
@@ -22,11 +25,27 @@ public class Controller implements Initializable {
     private static Semaphore dataProviderMutex = null;
     private static DataProvider dataProvider = null;
 
+    private XYChart.Series<Float, Float> humidityData = null;
+    private XYChart.Series<Float, Float> temperatureData = null;
+    private XYChart.Series<Float, Float> gpsData = null;
+
     @FXML
     private Menu menu_serial_port;
 
     @FXML
     private ProgressBar battery_indicator;
+
+    @FXML
+    private ProgressBar power_indicator;
+
+    @FXML
+    private LineChart<Float, Float> humidity_indicator;
+
+    @FXML
+    private LineChart<Float, Float> temperature_indicator;
+
+    @FXML
+    private ScatterChart<Float, Float> gps_chart;
 
     @FXML
     protected void handleMenuClose(ActionEvent event) {
@@ -71,6 +90,13 @@ public class Controller implements Initializable {
         });
         dataThread.setDaemon(true);
         dataThread.start();
+
+        humidityData = new XYChart.Series<>();
+        humidity_indicator.getData().add(humidityData);
+        temperatureData = new XYChart.Series<>();
+        temperature_indicator.getData().add(temperatureData);
+        gpsData = new XYChart.Series<>();
+        gps_chart.getData().add(gpsData);
     }
 
     public static DataProvider getDataProvider() {
@@ -87,7 +113,7 @@ public class Controller implements Initializable {
                 dataProvider.close();
             }
 
-            dataProvider = new DataProvider(newSerialPort);
+            dataProvider = newSerialPort != null ? new DataProvider(newSerialPort) : null;
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
@@ -106,17 +132,42 @@ public class Controller implements Initializable {
             RadioMenuItem menuItem = new RadioMenuItem(label);
             menuItem.setToggleGroup(toggleGroup);
             menuItem.setOnAction(event -> {
-                setCurrentSerialPort(port);
+                setCurrentSerialPort(menuItem.isSelected() ? port : null);
             });
 
             menu_serial_port.getItems().add(menuItem);
         }
     }
 
+    private float startTimestamp = -1;
     private void distributeData(Map<String, Float> dataEntry) {
         Float battery_level = dataEntry.get("battery");
         if (battery_level != null)
             updateBatteryLevel(battery_level);
+
+        Float power_level = dataEntry.get("power");
+        if (power_level != null)
+            updateBatteryPower(power_level);
+
+        Float gps_x = dataEntry.get("gps_x");
+        Float gps_y = dataEntry.get("gps_y");
+        if (gps_x != null && gps_y != null)
+            updateGPSCoordinates(gps_x, gps_y);
+
+        Float timestamp = dataEntry.get("timestamp");
+        if (timestamp == null)
+            return;
+        if (startTimestamp < 0)
+            startTimestamp = timestamp;
+        timestamp -= startTimestamp;
+
+        Float humidity = dataEntry.get("humidity");
+        if (humidity != null)
+            updateHumidityLevel(timestamp, humidity);
+
+        Float temperature = dataEntry.get("temperature");
+        if (temperature != null)
+            updateTemperatureLevel(timestamp, temperature);
     }
 
     private void updateBatteryLevel(float newValue) {
@@ -126,5 +177,32 @@ public class Controller implements Initializable {
             newValue = 1;
 
         battery_indicator.setProgress(newValue);
+    }
+
+    private float maxBatteryPower = 0;
+    private void updateBatteryPower(float newValue) {
+        if (newValue > maxBatteryPower)
+            maxBatteryPower = newValue;
+
+        power_indicator.setProgress(newValue / maxBatteryPower);
+    }
+
+    private void updateHumidityLevel(float timestamp, float newValue) {
+        Platform.runLater(() -> {
+            humidityData.getData().add(new XYChart.Data<>(timestamp, newValue));
+            humidity_indicator.setTitle(String.format("Humidité (%f)", newValue));
+        });
+    }
+
+    private void updateTemperatureLevel(float timestamp, float newValue) {
+        Platform.runLater(() -> {
+            temperatureData.getData().add(new XYChart.Data<>(timestamp, newValue));
+            temperature_indicator.setTitle(String.format("Température (%f)", newValue));
+        });
+    }
+
+    private void updateGPSCoordinates(float gps_x, float gps_y) {
+        Platform.runLater(() ->
+                gpsData.getData().add(new XYChart.Data<>(gps_x, gps_y)));
     }
 }

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.chart.ScatterChart?>
@@ -65,25 +64,25 @@
                         </AnchorPane>
                      </children>
                   </VBox>
-                  <LineChart title="Humidite" GridPane.columnIndex="1">
+                  <LineChart fx:id="humidity_indicator" legendVisible="false" title="Humidité" GridPane.columnIndex="1">
                     <xAxis>
-                      <CategoryAxis side="BOTTOM" />
+                      <NumberAxis side="BOTTOM" />
                     </xAxis>
                     <yAxis>
                       <NumberAxis side="LEFT" />
                     </yAxis>
                   </LineChart>
-                  <LineChart title="Temperature" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <LineChart fx:id="temperature_indicator" legendVisible="false" title="Température" GridPane.columnIndex="1" GridPane.rowIndex="1">
                     <xAxis>
-                      <CategoryAxis side="BOTTOM" />
+                      <NumberAxis side="BOTTOM" />
                     </xAxis>
                     <yAxis>
                       <NumberAxis side="LEFT" />
                     </yAxis>
                   </LineChart>
-                  <ScatterChart horizontalGridLinesVisible="false" title="GPS" verticalGridLinesVisible="false" GridPane.rowIndex="1">
+                  <ScatterChart fx:id="gps_chart" horizontalGridLinesVisible="false" horizontalZeroLineVisible="false" title="GPS" verticalGridLinesVisible="false" verticalZeroLineVisible="false" GridPane.rowIndex="1">
                     <xAxis>
-                      <CategoryAxis side="BOTTOM" />
+                      <NumberAxis side="BOTTOM" />
                     </xAxis>
                     <yAxis>
                       <NumberAxis side="LEFT" />
