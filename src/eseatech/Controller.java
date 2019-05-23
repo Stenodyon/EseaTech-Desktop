@@ -5,17 +5,21 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Menu;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.RadioMenuItem;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
+import javafx.stage.FileChooser;
 import org.msgpack.core.MessageTypeException;
 
+import javax.swing.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.Semaphore;
@@ -28,6 +32,8 @@ public class Controller implements Initializable {
     private XYChart.Series<Float, Float> humidityData = null;
     private XYChart.Series<Float, Float> temperatureData = null;
     private XYChart.Series<Float, Float> gpsData = null;
+
+    private ArrayList<float[]> data = null;
 
     @FXML
     private Menu menu_serial_port;
@@ -71,6 +77,7 @@ public class Controller implements Initializable {
                             for (Map<String, Float> entry : entries) {
                                 System.out.println(entry.toString());
                                 distributeData(entry);
+                                appendEntry(entry);
                             }
                         } catch (MessageTypeException e) {
                             dataProvider.clearBytes();
@@ -99,6 +106,43 @@ public class Controller implements Initializable {
         temperature_indicator.getData().add(temperatureData);
         gpsData = new XYChart.Series<>();
         gps_chart.getData().add(gpsData);
+
+        data = new ArrayList<>();
+    }
+
+    private void appendEntry(Map<String, Float> entry) {
+        float[] row = {
+                entry.get("timestamp"),
+                entry.get("battery"),
+                entry.get("power"),
+                entry.get("humidity"),
+                entry.get("temperature"),
+                entry.get("gps_x"),
+                entry.get("gps_y"),
+        };
+        data.add(row);
+    }
+
+    @FXML
+    protected void exportXML(ActionEvent event) throws IOException {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Export XML");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Fichiers XML", "*.xml"),
+                new FileChooser.ExtensionFilter("Tous les fichiers", "*.*")
+        );
+        File selectedFile = fileChooser.showSaveDialog(battery_indicator.getScene().getWindow());
+        if (selectedFile == null)
+            return;
+
+        BufferedWriter writer = new BufferedWriter(new FileWriter(selectedFile));
+        for (float[] row : data) {
+            for (float value : row) {
+                writer.write(String.format("%f,", value));
+            }
+            writer.write("\n");
+        }
+        writer.close();
     }
 
     public static DataProvider getDataProvider() {

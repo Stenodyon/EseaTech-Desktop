@@ -18,8 +18,13 @@
    <children>
       <MenuBar>
         <menus>
-          <Menu mnemonicParsing="false" text="FIchier">
+          <Menu mnemonicParsing="false" text="Fichier">
             <items>
+                  <Menu mnemonicParsing="false" text="Exporter">
+                    <items>
+                      <MenuItem mnemonicParsing="false" onAction="#exportXML" text="XML" />
+                    </items>
+                  </Menu>
               <MenuItem fx:id="menuClose" mnemonicParsing="false" onAction="#handleMenuClose" text="Quitter" />
             </items>
           </Menu>

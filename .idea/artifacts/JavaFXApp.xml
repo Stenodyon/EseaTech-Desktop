@@ -12,7 +12,7 @@
       </options>
     </properties>
     <root id="root">
-      <element id="archive" name="Telemetry.jar">
+      <element id="archive" name="Eseatech.jar">
         <element id="module-output" name="EseaTech" />
       </element>
       <element id="library" level="project" name="lib" />
