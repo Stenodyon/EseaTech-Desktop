@@ -8,5 +8,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="lib" level="project" />
+    <orderEntry type="library" name="jSerialComm-2.5.2" level="project" />
+    <orderEntry type="library" name="msgpack-core-0.8.18" level="project" />
   </component>
 </module>

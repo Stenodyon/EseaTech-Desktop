@@ -1,0 +1,20 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="EseaTech:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/EseaTech_jar</output-path>
+    <root id="archive" name="EseaTech.jar">
+      <element id="module-output" name="EseaTech" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../lib/msgpack-core-0.8.18.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../lib/jSerialComm-2.5.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="/usr/lib/jvm/java-8-openjdk/jre/lib/ext/jfxrt.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="/usr/lib/jvm/java-8-openjdk/jre/lib/ext/dnsns.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="/usr/lib/jvm/java-8-openjdk/jre/lib/ext/sunec.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="/usr/lib/jvm/java-8-openjdk/jre/lib/ext/zipfs.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="/usr/lib/jvm/java-8-openjdk/jre/lib/ext/jaccess.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="/usr/lib/jvm/java-8-openjdk/jre/lib/ext/nashorn.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="/usr/lib/jvm/java-8-openjdk/jre/lib/ext/cldrdata.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="/usr/lib/jvm/java-8-openjdk/jre/lib/ext/sunpkcs11.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="/usr/lib/jvm/java-8-openjdk/jre/lib/ext/localedata.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="/usr/lib/jvm/java-8-openjdk/jre/lib/ext/sunjce_provider.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="msgpack-core-0.8.18">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../lib/msgpack-core-0.8.18.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
